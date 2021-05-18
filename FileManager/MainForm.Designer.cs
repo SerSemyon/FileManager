@@ -31,14 +31,12 @@ namespace FileManager
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.listFiles1 = new FileManager.ListFiles();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.listFiles2 = new FileManager.ListFiles();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonUnzip = new System.Windows.Forms.Button();
             this.buttonZip = new System.Windows.Forms.Button();
@@ -47,6 +45,8 @@ namespace FileManager
             this.buttonRename = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
             this.buttonNewFolder = new System.Windows.Forms.Button();
+            this.listFiles1 = new FileManager.ListFiles();
+            this.listFiles2 = new FileManager.ListFiles();
             this.mainTableLayoutPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -73,20 +73,6 @@ namespace FileManager
             this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTableLayoutPanel.Size = new System.Drawing.Size(800, 450);
             this.mainTableLayoutPanel.TabIndex = 1;
-            // 
-            // listFiles1
-            // 
-            this.listFiles1.AllowDrop = true;
-            this.listFiles1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listFiles1.FormattingEnabled = true;
-            this.listFiles1.Location = new System.Drawing.Point(3, 29);
-            this.listFiles1.Name = "listFiles1";
-            this.listFiles1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listFiles1.Size = new System.Drawing.Size(374, 418);
-            this.listFiles1.TabIndex = 4;
-            this.listFiles1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles1_MouseClick);
-            this.listFiles1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles1_DragEnter);
-            this.listFiles1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick);
             // 
             // tableLayoutPanel1
             // 
@@ -159,20 +145,6 @@ namespace FileManager
             this.textBox2.TabIndex = 2;
             this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyDown);
             // 
-            // listFiles2
-            // 
-            this.listFiles2.AllowDrop = true;
-            this.listFiles2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listFiles2.FormattingEnabled = true;
-            this.listFiles2.Location = new System.Drawing.Point(423, 29);
-            this.listFiles2.Name = "listFiles2";
-            this.listFiles2.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listFiles2.Size = new System.Drawing.Size(374, 418);
-            this.listFiles2.TabIndex = 7;
-            this.listFiles2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseClick);
-            this.listFiles2.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles2_DragEnter);
-            this.listFiles2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick_1);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.buttonUnzip);
@@ -198,6 +170,7 @@ namespace FileManager
             this.buttonUnzip.Size = new System.Drawing.Size(34, 23);
             this.buttonUnzip.TabIndex = 11;
             this.buttonUnzip.UseVisualStyleBackColor = true;
+            this.buttonUnzip.Click += new System.EventHandler(this.buttonUnzip_Click);
             // 
             // buttonZip
             // 
@@ -208,6 +181,7 @@ namespace FileManager
             this.buttonZip.Size = new System.Drawing.Size(34, 23);
             this.buttonZip.TabIndex = 10;
             this.buttonZip.UseVisualStyleBackColor = true;
+            this.buttonZip.Click += new System.EventHandler(this.buttonZip_Click);
             // 
             // buttonPastle
             // 
@@ -263,6 +237,34 @@ namespace FileManager
             this.buttonNewFolder.TabIndex = 5;
             this.buttonNewFolder.UseVisualStyleBackColor = true;
             this.buttonNewFolder.Click += new System.EventHandler(this.buttonNewFolder_Click);
+            // 
+            // listFiles1
+            // 
+            this.listFiles1.AllowDrop = true;
+            this.listFiles1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listFiles1.FormattingEnabled = true;
+            this.listFiles1.Location = new System.Drawing.Point(3, 29);
+            this.listFiles1.Name = "listFiles1";
+            this.listFiles1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listFiles1.Size = new System.Drawing.Size(374, 418);
+            this.listFiles1.TabIndex = 4;
+            this.listFiles1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles1_MouseClick);
+            this.listFiles1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles1_DragEnter);
+            this.listFiles1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick);
+            // 
+            // listFiles2
+            // 
+            this.listFiles2.AllowDrop = true;
+            this.listFiles2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listFiles2.FormattingEnabled = true;
+            this.listFiles2.Location = new System.Drawing.Point(423, 29);
+            this.listFiles2.Name = "listFiles2";
+            this.listFiles2.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listFiles2.Size = new System.Drawing.Size(374, 418);
+            this.listFiles2.TabIndex = 7;
+            this.listFiles2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseClick);
+            this.listFiles2.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles2_DragEnter);
+            this.listFiles2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick_1);
             // 
             // MainForm
             // 

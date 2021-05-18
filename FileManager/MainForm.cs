@@ -76,7 +76,13 @@ namespace FileManager
 
         private void buttonNewFolder_Click(object sender, EventArgs e)
         {
-            
+            EnterName nameForm = new EnterName("Новая папка", this);
+            nameForm.ShowDialog();
+            if (nameForm.result == DialogResult.OK)
+            {
+                Directory.CreateDirectory(Path.Combine(ActiveList.addressText.Text, nameForm.textBox1.Text));
+                ActiveList.UpdateContent();
+            }
         }
 
         private void listFiles1_MouseClick(object sender, MouseEventArgs e)
@@ -91,20 +97,63 @@ namespace FileManager
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-
+            DialogResult del = MessageBox.Show("Вы уверены?", "Удалить?", MessageBoxButtons.OKCancel);
+            if (del == DialogResult.OK)
+            {
+                foreach (var f in ActiveList.SelectedItems)
+                {
+                    try
+                    {
+                        Directory.Delete(ActiveList.addressText.Text + f, true);
+                    }
+                    catch
+                    {
+                        File.Delete(ActiveList.addressText.Text + f);
+                    }
+                }
+                ActiveList.UpdateContent();
+            }
         }
-
+        
         private void buttonRename_Click(object sender, EventArgs e)
         {
+            EnterName nameForm = new EnterName(ActiveList.SelectedItem.ToString(), this);
+            nameForm.ShowDialog();
+            if (nameForm.result == DialogResult.OK)
+            {
+                string newPath = Path.Combine(ActiveList.addressText.Text, nameForm.textBox1.Text);
+                try
+                {
+                    if (File.Exists(newPath))
+                    {
+                        MessageBox.Show("Файл с таким именем уже существует", "", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        File.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
+                    }
 
+                }
+                catch
+                {
+                    if (Directory.Exists(newPath))
+                    {
+                        MessageBox.Show("Папка с таким именем уже существует", "", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        Directory.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
+                    }
+                }
+                ActiveList.UpdateContent();
+            }
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
         {
             selectedFiles.Clear();
-            foreach(FileInfo file in ActiveList.SelectedItems)
+            foreach(var file in ActiveList.SelectedItems)
             {
-                string bla = file.ToString();
                 selectedFiles.Add(ActiveList.addressText.Text + file.ToString());
             }
         }
@@ -119,29 +168,38 @@ namespace FileManager
                 }
                 else
                 {
-                    Directory.CreateDirectory(ActiveList.addressText.Text + Path.GetFileName(file));
-                    File.Copy(file, ActiveList.addressText.Text+Path.GetDirectoryName(file));
+                    File.Copy(file, ActiveList.addressText.Text+Path.GetFileName(file),true);
                 }
             }
+            listFiles1.UpdateContent();
+            listFiles2.UpdateContent();
         }
         private void DirectoryCopy(string from, string to)
         {
-            string newFolder = to + Path.GetDirectoryName(from);
+            string newFolder = to + Path.GetFileName(from);
             DirectoryInfo dir = new DirectoryInfo(from);
             DirectoryInfo[] dirs = dir.GetDirectories();
-            Directory.CreateDirectory(to);
+            Directory.CreateDirectory(newFolder);
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
             {
-                string tempPath = Path.Combine(to, file.Name);
-                file.CopyTo(tempPath, false);
+                file.CopyTo(Path.Combine(newFolder, file.Name), true);
             }
 
             foreach (DirectoryInfo subdir in dirs)
             {
-                string tempPath = Path.Combine(to, subdir.Name);
-                DirectoryCopy(subdir.FullName, tempPath);
+                DirectoryCopy(subdir.FullName, Path.Combine(newFolder , subdir.Name));
             }
+
+        }
+
+        private void buttonZip_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonUnzip_Click(object sender, EventArgs e)
+        {
 
         }
     }
