@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using Ionic.Zip;
 namespace FileManager
 {
     public partial class MainForm : Form
@@ -76,6 +77,10 @@ namespace FileManager
 
         private void buttonNewFolder_Click(object sender, EventArgs e)
         {
+            NewFolder();
+        }
+        void NewFolder()
+        {
             EnterName nameForm = new EnterName("Новая папка", this);
             nameForm.ShowDialog();
             if (nameForm.result == DialogResult.OK)
@@ -84,7 +89,6 @@ namespace FileManager
                 ActiveList.UpdateContent();
             }
         }
-
         private void listFiles1_MouseClick(object sender, MouseEventArgs e)
         {
             ActiveList = listFiles1;
@@ -95,57 +99,70 @@ namespace FileManager
             ActiveList = listFiles2;
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        private async void buttonDelete_Click(object sender, EventArgs e)
         {
             DialogResult del = MessageBox.Show("Вы уверены?", "Удалить?", MessageBoxButtons.OKCancel);
             if (del == DialogResult.OK)
             {
+                List<string> files = new List<string>();
+                string pathDirectory = ActiveList.addressText.Text;
                 foreach (var f in ActiveList.SelectedItems)
                 {
-                    try
-                    {
-                        Directory.Delete(ActiveList.addressText.Text + f, true);
-                    }
-                    catch
-                    {
-                        File.Delete(ActiveList.addressText.Text + f);
-                    }
+                    files.Add(f.ToString());
                 }
-                ActiveList.UpdateContent();
+                await delete(files);
             }
         }
-        
-        private void buttonRename_Click(object sender, EventArgs e)
+        async Task delete(List<string> files)
         {
-            EnterName nameForm = new EnterName(ActiveList.SelectedItem.ToString(), this);
-            nameForm.ShowDialog();
-            if (nameForm.result == DialogResult.OK)
+            foreach (var f in ActiveList.SelectedItems)
             {
-                string newPath = Path.Combine(ActiveList.addressText.Text, nameForm.textBox1.Text);
                 try
                 {
-                    if (File.Exists(newPath))
-                    {
-                        MessageBox.Show("Файл с таким именем уже существует", "", MessageBoxButtons.OK);
-                    }
-                    else
-                    {
-                        File.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
-                    }
-
+                    Directory.Delete(ActiveList.addressText.Text + f, true);
                 }
                 catch
                 {
-                    if (Directory.Exists(newPath))
-                    {
-                        MessageBox.Show("Папка с таким именем уже существует", "", MessageBoxButtons.OK);
-                    }
-                    else
-                    {
-                        Directory.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
-                    }
+                    File.Delete(ActiveList.addressText.Text + f);
                 }
-                ActiveList.UpdateContent();
+            }
+            ActiveList.UpdateContent();
+        }
+        private void buttonRename_Click(object sender, EventArgs e)
+        {
+            object obj = ActiveList.SelectedItem;
+            if (obj != null)
+            {
+                EnterName nameForm = new EnterName(obj.ToString(), this);
+                nameForm.ShowDialog();
+                if (nameForm.result == DialogResult.OK)
+                {
+                    string newPath = Path.Combine(ActiveList.addressText.Text, nameForm.textBox1.Text);
+                    try
+                    {
+                        if (File.Exists(newPath))
+                        {
+                            MessageBox.Show("Файл с таким именем уже существует", "", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            File.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
+                        }
+
+                    }
+                    catch
+                    {
+                        if (Directory.Exists(newPath))
+                        {
+                            MessageBox.Show("Папка с таким именем уже существует", "", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            Directory.Move(Path.Combine(ActiveList.addressText.Text, ActiveList.SelectedItem.ToString()), newPath);
+                        }
+                    }
+                    ActiveList.UpdateContent();
+                }
             }
         }
 
@@ -158,21 +175,15 @@ namespace FileManager
             }
         }
 
-        private void buttonPastle_Click(object sender, EventArgs e)
+        private async void buttonPastle_Click(object sender, EventArgs e)
         {
-            foreach (string file in selectedFiles)
+            List<string> files = new List<string>();
+            string pathDirectory = ActiveList.addressText.Text;
+            foreach (var f in ActiveList.SelectedItems)
             {
-                if (File.GetAttributes(file) == FileAttributes.Directory)
-                {
-                    DirectoryCopy(file, ActiveList.addressText.Text);
-                }
-                else
-                {
-                    File.Copy(file, ActiveList.addressText.Text+Path.GetFileName(file),true);
-                }
+                files.Add(f.ToString());
             }
-            listFiles1.UpdateContent();
-            listFiles2.UpdateContent();
+            await Copy();
         }
         private void DirectoryCopy(string from, string to)
         {
@@ -185,22 +196,95 @@ namespace FileManager
             {
                 file.CopyTo(Path.Combine(newFolder, file.Name), true);
             }
-
             foreach (DirectoryInfo subdir in dirs)
             {
                 DirectoryCopy(subdir.FullName, Path.Combine(newFolder , subdir.Name));
             }
-
         }
 
-        private void buttonZip_Click(object sender, EventArgs e)
+        private async void buttonZip_Click(object sender, EventArgs e)
         {
-
+            EnterName formName = new EnterName("Новый архив", this);
+            formName.ShowDialog();
+            if (formName.result == DialogResult.OK)
+            {
+                await Compress(formName.textBox1.Text);
+            }
         }
 
         private void buttonUnzip_Click(object sender, EventArgs e)
         {
+            
+        }
 
+        private void createToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void featuresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        private async Task Compress(string name)
+        {
+            List<string> files = new List<string>();
+            string pathDirectory = ActiveList.addressText.Text;
+            foreach (var f in ActiveList.SelectedItems)
+            {
+                files.Add(f.ToString());
+            }
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncodingUsage = ZipOption.Always;
+                zip.AlternateEncoding = Encoding.GetEncoding(866);
+                foreach (string item in files)
+                {
+                    string path = pathDirectory + item;
+                    if (File.Exists(path))
+                    {
+                        await Task.Run(() => zip.AddFile(path, ""));
+                    }
+                    else
+                    {
+
+                        await Task.Run(() => zip.AddDirectory(path, Path.GetFileName(path)));
+                    }
+                }
+                zip.Save(Path.Combine(pathDirectory,name) + ".zip");
+                ActiveList.UpdateContent();
+            }
+        }
+        async Task Copy()
+        {
+            foreach (string file in selectedFiles)
+            {
+                if (File.GetAttributes(file) == FileAttributes.Directory)
+                {
+                    DirectoryCopy(file, ActiveList.addressText.Text);
+                }
+                else
+                {
+                    File.Copy(file, ActiveList.addressText.Text + Path.GetFileName(file), true);
+                }
+            }
+            listFiles1.UpdateContent();
+            listFiles2.UpdateContent();
         }
     }
 }
