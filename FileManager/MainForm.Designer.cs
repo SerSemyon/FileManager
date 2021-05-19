@@ -259,7 +259,7 @@ namespace FileManager
             this.featuresToolStripMenuItem,
             this.compressToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(128, 158);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(147, 158);
             // 
             // createToolStripMenuItem
             // 
@@ -271,7 +271,8 @@ namespace FileManager
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -285,14 +286,16 @@ namespace FileManager
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // pastleToolStripMenuItem
             // 
             this.pastleToolStripMenuItem.Name = "pastleToolStripMenuItem";
-            this.pastleToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.pastleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.pastleToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.pastleToolStripMenuItem.Text = "Pastle";
             // 
             // featuresToolStripMenuItem
@@ -319,6 +322,7 @@ namespace FileManager
             this.listFiles1.Size = new System.Drawing.Size(374, 418);
             this.listFiles1.TabIndex = 4;
             this.listFiles1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles1_MouseClick);
+            this.listFiles1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listFiles1_DragDrop);
             this.listFiles1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles1_DragEnter);
             this.listFiles1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick);
             // 
@@ -333,6 +337,7 @@ namespace FileManager
             this.listFiles2.Size = new System.Drawing.Size(374, 418);
             this.listFiles2.TabIndex = 7;
             this.listFiles2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseClick);
+            this.listFiles2.DragDrop += new System.Windows.Forms.DragEventHandler(this.listFiles2_DragDrop);
             this.listFiles2.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles2_DragEnter);
             this.listFiles2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles2_MouseDoubleClick_1);
             // 

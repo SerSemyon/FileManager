@@ -56,6 +56,7 @@ namespace FileManager
                 {
                     ShowMyComputer();
                 }
+                UpdateContent();
             }
             else
             {

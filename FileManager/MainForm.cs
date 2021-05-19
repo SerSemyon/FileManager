@@ -25,6 +25,8 @@ namespace FileManager
             listFiles2.ShowMyComputer();
             ActiveList = listFiles1;
             selectedFiles = new List<string>(10);
+            listFiles1.ContextMenuStrip = contextMenuStrip1;
+            listFiles2.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void listFiles2_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -56,7 +58,7 @@ namespace FileManager
         private void textBox2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                listFiles2.OpenDirectory(textBox1.Text);
+                listFiles2.OpenDirectory(textBox2.Text);
         }
 
         private void listFiles1_DragEnter(object sender, DragEventArgs e)
@@ -185,7 +187,7 @@ namespace FileManager
             }
             await Copy();
         }
-        private void DirectoryCopy(string from, string to)
+        private async Task DirectoryCopy(string from, string to)
         {
             string newFolder = to + Path.GetFileName(from);
             DirectoryInfo dir = new DirectoryInfo(from);
@@ -219,27 +221,28 @@ namespace FileManager
 
         private void createToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            buttonNewFolder.PerformClick();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            buttonDelete.PerformClick();
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            buttonRename.PerformClick();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            buttonCopy.PerformClick();
         }
 
         private void featuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            //string info = File.Get
+            //MessageBox.Show("",Path.Combine(ActiveList.addressText.Text,ActiveList.SelectedItem.ToString())
         }
         private async Task Compress(string name)
         {
@@ -285,6 +288,31 @@ namespace FileManager
             }
             listFiles1.UpdateContent();
             listFiles2.UpdateContent();
+        }
+
+        private async void listFiles1_DragDrop(object sender, DragEventArgs e)
+        {
+             await DragDropCopy(listFiles1, e);
+        }
+
+        private async void listFiles2_DragDrop(object sender, DragEventArgs e)
+        {
+             await DragDropCopy(listFiles2, e);
+        }
+        async Task DragDropCopy(ListFiles list, DragEventArgs e)
+        {
+            foreach (string f in (string[])e.Data.GetData(DataFormats.FileDrop))
+            {
+                if (File.Exists(f))
+                {
+                    File.Copy(f, list.addressText.Text + Path.GetFileName(f), true);
+                }
+                else
+                {
+                    await DirectoryCopy(f, list.addressText.Text);
+                }
+                list.UpdateContent();
+            }
         }
     }
 }
