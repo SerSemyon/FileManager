@@ -5,5 +5,3 @@
 Архивация и копирование происходят в отдельном потоке.
 
 ![image](https://user-images.githubusercontent.com/79765063/176959453-2ded0149-61fd-425d-8d68-422045edf9c3.png)
-
-Проект написан на C# 10 с использованием Windows Forms и .NET 6.
